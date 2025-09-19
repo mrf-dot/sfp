@@ -15,8 +15,12 @@ BEGIN {
 		exit 1
 	}
 
+	# Escape single quotes to prevent shell injection
+	gsub(/'/, "'\\''", dir)
+	gsub(/'/, "'\\''", fp)
+
 	# Check that user provided a valid directory
-	cmd=sprintf("test -d '%s'", dir)
+	cmd=sprintf("[ -d '%s' ]", dir)
 	if (system(cmd)) {
 		print "Error: Directory '" dir "' does not exist" > "/dev/stderr"
 		exit 1
@@ -39,6 +43,7 @@ BEGIN {
 	} else {
 		print sum
 	}
+	exit 0
 }
 
 function human_filesize(size,    sizes, unit) {
